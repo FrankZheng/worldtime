@@ -32,7 +32,7 @@ class City:
 
 		if timezones_offset_map.has_key(self.timezone):
 			self.timezone_offset = timezones_offset_map[self.timezone]
-		
+
 
 	def info(self):
 		return '%s, %s, %s, %s(%f)' % (self.asciiname, self.statename, self.contryname, self.timezone, self.timezone_offset)
@@ -90,20 +90,17 @@ def parse_timezones(timezones_filename):
 			timezoneId = fields[1]
 			offset = float(fields[2])
 			timezones_offset_map[timezoneId] = offset
-	return timezones_offset_map	
+	return timezones_offset_map
 
-	
+
 
 def test():
 	country_code_name_map = parse_contries('./countryInfo.txt')
-
 	state_name_map = parse_states('./admin1CodesASCII.txt')
+	timezones_offset_map = parse_timezones('./timeZones.txt')
+	cities_name_map = parse_cities('./cities15000.txt', country_code_name_map, state_name_map, timezones_offset_map)
 
-	cities_name_map = parse_cities('./cities15000.txt', country_code_name_map, state_name_map)
-
-
-
-	selected_cityname = sys.argv[1]
+	selected_cityname = sys.argv[1].lower()
 
 	if cities_name_map.has_key(selected_cityname):
 		selected_cities = cities_name_map[selected_cityname.lower()]
@@ -111,7 +108,7 @@ def test():
 		print 'no such city'
 		return
 
-	for selected_city in selected_cities: 
+	for selected_city in selected_cities:
 		print selected_city.info()
 
 
@@ -150,19 +147,19 @@ def index():
 		if cities_name_map.has_key(city_name):
 			cities = cities_name_map[city_name]
 			for city in cities:
-				d = { 
-				'name' : city.asciiname.upper(), 
+				d = {
+				'name' : city.asciiname.lower(),
 				'state' : city.statename,
 				'country_name' : city.contryname,
-				'timezone' : city.timezone, 
+				'timezone' : city.timezone,
 				'timezone_offset' : city.timezone_offset
 				}
 			response.append(d)
-			
-	return json.dumps(response)	
+
+	return json.dumps(response)
 
 
 
 
 
-	    
+
